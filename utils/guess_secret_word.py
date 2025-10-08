@@ -15,11 +15,11 @@ from tqdm import tqdm
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from calculate_metrics import calculate_metrics
-from sae_utils import fetch_sae_feature_description
-
 from sampling.inference_engine import InferenceEngine
 from sampling.utils import load_model_and_tokenizer
+
+from calculate_metrics import calculate_metrics
+from sae_utils import fetch_sae_feature_description
 
 load_dotenv()
 
@@ -27,6 +27,7 @@ load_dotenv()
 # ============================================================================
 # DATA LOADING AND EXTRACTION
 # ============================================================================
+
 
 def load_results_file(file_path: str) -> Dict[str, Any]:
     """Load results from JSON file."""
@@ -71,6 +72,7 @@ def extract_pairs(data: Dict[str, Any]) -> List[Dict[str, Any]]:
 # ============================================================================
 # PROMPT PREPARATION
 # ============================================================================
+
 
 def load_prompt_template(template_path: str) -> str:
     """Load prompt template from file."""
@@ -175,7 +177,7 @@ def prepare_prompt(
     pair: Dict[str, Any],
     template: str,
     mode: str,
-    num_guesses: int = 5,
+    num_guesses: int = 1,
     num_tokens: int = 5,
     num_features: int = 5,
     layer: int = 32,
@@ -282,9 +284,12 @@ def parse_guesses(response_text: str, num_guesses: Optional[int] = None) -> List
 # MAIN LOGIC
 # ============================================================================
 
+
 def create_parser() -> argparse.ArgumentParser:
     """Create argument parser."""
-    parser = argparse.ArgumentParser(description="Streamlined secret word guessing with auditor model")
+    parser = argparse.ArgumentParser(
+        description="Streamlined secret word guessing with auditor model"
+    )
 
     # Required arguments
     parser.add_argument("--model_name", required=True, help="Auditor model name/path")
@@ -310,7 +315,7 @@ def create_parser() -> argparse.ArgumentParser:
 
     # Generation parameters
     parser.add_argument(
-        "--num_guesses", type=int, default=5, help="Number of guesses to request"
+        "--num_guesses", type=int, default=1, help="Number of guesses to request"
     )
     parser.add_argument(
         "--num_tokens", type=int, default=5, help="Number of top tokens to include"
@@ -347,13 +352,13 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--target_words",
         type=str,
-        nargs='+',
-        help="Target word(s) to check for in guesses for metrics calculation. If provided, metrics will be calculated automatically."
+        nargs="+",
+        help="Target word(s) to check for in guesses for metrics calculation. If provided, metrics will be calculated automatically.",
     )
     parser.add_argument(
         "--skip_metrics",
         action="store_true",
-        help="Skip automatic metrics calculation even if target_words are provided"
+        help="Skip automatic metrics calculation even if target_words are provided",
     )
 
     return parser
@@ -418,21 +423,21 @@ def main():
         )
 
         formatted_prompts.append(chat_prompt)
-        pair_mappings.append({
-            "index": i,
-            "original_pair": pair,
-            "formatted_prompt": formatted_prompt,
-            "chat_prompt": chat_prompt
-        })
+        pair_mappings.append(
+            {
+                "index": i,
+                "original_pair": pair,
+                "formatted_prompt": formatted_prompt,
+                "chat_prompt": chat_prompt,
+            }
+        )
 
     # Show first prompt for debugging
     if formatted_prompts:
         print("\n" + "=" * 60)
         print("🔍 SAMPLE PROMPT:")
         print("=" * 60)
-        print(
-            formatted_prompts[0]
-        )
+        print(formatted_prompts[0])
         print("=" * 60 + "\n")
 
     # Run inference
@@ -532,7 +537,9 @@ def main():
                     json.dump(metrics, f, indent=2, ensure_ascii=False)
 
                 print(f"✅ Metrics saved: {metrics_path}")
-                print(f"📊 Mean accuracy: {metrics['metrics']['mean_accuracy']:.4f} ({metrics['metrics']['mean_accuracy']*100:.2f}%)")
+                print(
+                    f"📊 Mean accuracy: {metrics['metrics']['mean_accuracy']:.4f} ({metrics['metrics']['mean_accuracy'] * 100:.2f}%)"
+                )
                 print(f"📊 Std deviation: {metrics['metrics']['std_accuracy']:.4f}")
             else:
                 print("❌ Failed to calculate metrics")

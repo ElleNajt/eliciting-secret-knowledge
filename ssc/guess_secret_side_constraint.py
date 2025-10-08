@@ -562,7 +562,7 @@ def main():
         help="Auditor mode.",
     )
     parser.add_argument(
-        "--num_guesses", type=int, default=5, help="Number of guesses to ask for."
+        "--num_guesses", type=int, default=1, help="Number of guesses to ask for."
     )
     parser.add_argument(
         "--output_dir",

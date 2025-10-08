@@ -62,7 +62,7 @@ class ObservableLanguageModelGemma2:
             torch_dtype=dtype,
             device_map="cuda",
             trust_remote_code=True,
-            attn_implementation="flash_attention_2",
+            attn_implementation="eager",
             low_cpu_mem_usage=True,
         )
         self._original_tokenizer = AutoTokenizer.from_pretrained(
@@ -153,7 +153,7 @@ class ObservableLanguageModel:
             torch_dtype=dtype,
             device_map="cuda",
             trust_remote_code=True,
-            attn_implementation="flash_attention_2",
+            attn_implementation="eager",
         )
         self._original_tokenizer = AutoTokenizer.from_pretrained(
             "meta-llama/Llama-3.3-70B-Instruct",

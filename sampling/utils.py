@@ -25,7 +25,7 @@ def load_model_and_tokenizer(model_name: str, device: str = None) -> Tuple[AutoM
             model_name,
             torch_dtype=torch.bfloat16,
             device_map="auto",
-            attn_implementation="flash_attention_2",
+            attn_implementation="eager",
             trust_remote_code=True,
         )
 

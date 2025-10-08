@@ -42,7 +42,7 @@ def extract_layer_probabilities(model, merged_tokens: torch.Tensor, target_layer
             all_layer_probs.append(probs)
 
     # Convert to numpy and return
-    layer_probs = torch.stack([probs.value for probs in all_layer_probs])
+    layer_probs = torch.stack([probs for probs in all_layer_probs])
     layer_probs = layer_probs.detach().cpu().to(dtype=torch.float32).numpy()
     layer_probs = layer_probs.squeeze(1).squeeze(0)
     return layer_probs  # Remove batch dimension
